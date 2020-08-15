@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: go
-          image: gcr.io/$PROJECT_ID/devops-k8s-go
+          image: gcr.io/speedy-aileron-284100/devops-k8s-go
           ports:
             - containerPort: 8000
