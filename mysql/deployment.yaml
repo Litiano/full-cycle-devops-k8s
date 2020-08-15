@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-k8s-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-k8s-server
+      tier: db
+  template:
+    metadata:
+      labels:
+        app: mysql-k8s-server
+        tier: db
+    spec:
+      containers:
+        - image: mysql:5.7
+          name: mysql-k8s-server
+          args:
+            - "--ignore-db-dir=lost+found"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-k8s-pass
+                  key: password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-k8s-persistent-storage
+              mountPath: /var/lib/mysql
+
+      volumes:
+        - name: mysql-k8s-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-k8s-pv-claim
+
